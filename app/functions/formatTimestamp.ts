@@ -1,5 +1,5 @@
 export function formatTimestamp(timestamp: number): string {
-  const date = new Date(timestamp * 1000);
+  const date = new Date(timestamp);
   const pad = (n: number) => n.toString().padStart(2, "0");
   const day = pad(date.getDate());
   const month = pad(date.getMonth() + 1);

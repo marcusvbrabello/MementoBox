@@ -6,6 +6,7 @@ import { CameraView } from "expo-camera";
 import { Camera, CameraRotate, X } from "phosphor-react-native";
 import React, { useEffect } from "react";
 import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+import { ToastProvider } from "react-native-toast-notifications";
 import { style } from "./styles";
 
 export default function TakePhoto() {
@@ -17,7 +18,7 @@ export default function TakePhoto() {
     setFacing,
     requestPermission,
     goBack,
-    takeAndSavePhoto
+    takeAndSavePhoto,
   } = useTakePhotoViewModel();
 
   useEffect(() => {
@@ -35,24 +36,29 @@ export default function TakePhoto() {
   }
 
   return (
-    <View style={flex}>
-      <CameraView
-        ref={cameraRef}
-        facing={facing ? "front" : "back"}
-        mirror={false}
-        style={flex}
-      />
-      <View style={footer}>
-        <TouchableOpacity onPress={goBack}>
-          <X size={resizePixel(28)} color={colors.WHITE} />
-        </TouchableOpacity>
-        <TouchableOpacity style={cameraButton} onPress={() => takeAndSavePhoto()}>
-          <Camera size={resizePixel(40)} color={colors.BLACK} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setFacing(!facing)}>
-          <CameraRotate size={resizePixel(28)} color={colors.WHITE} />
-        </TouchableOpacity>
+    <ToastProvider>
+      <View style={flex}>
+        <CameraView
+          ref={cameraRef}
+          facing={facing ? "front" : "back"}
+          mirror={false}
+          style={flex}
+        />
+        <View style={footer}>
+          <TouchableOpacity onPress={goBack}>
+            <X size={resizePixel(28)} color={colors.WHITE} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={cameraButton}
+            onPress={() => takeAndSavePhoto()}
+          >
+            <Camera size={resizePixel(40)} color={colors.BLACK} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setFacing(!facing)}>
+            <CameraRotate size={resizePixel(28)} color={colors.WHITE} />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ToastProvider>
   );
 }

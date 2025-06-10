@@ -1,5 +1,6 @@
-import { loadPhotosFromFolder } from "@functions/loadPhotosFromFolder";
+import useToast from "@hooks/useToast";
 import { albumStore } from "@store/album";
+import { Photo } from "@store/types";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as FileSystem from "expo-file-system";
 import * as Location from "expo-location";
@@ -11,6 +12,8 @@ export function useTakePhotoViewModel() {
   const store = albumStore((state) => state);
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<boolean>(false);
+
+  const { changePhotos } = store;
 
   const cameraRef = useRef<CameraView>(null);
 
@@ -54,11 +57,58 @@ export function useTakePhotoViewModel() {
         JSON.stringify(metadata)
       );
 
-      loadPhotosFromFolder();
+      useToast("Foto adicionada com sucesso!", "success");
 
-      setTimeout(() => router.dismiss(), 500);
+      setTimeout(() => {
+        loadPhotosFromFolder();
+      }, 1500);
     } catch (e) {
       console.error("Error taking or saving photo:", e);
+    }
+  };
+
+  const loadPhotosFromFolder = async () => {
+    try {
+      const folderUri = FileSystem.documentDirectory + "MementoBoxPhotos";
+      const folderInfo = await FileSystem.getInfoAsync(folderUri);
+      if (!folderInfo.exists) {
+        changePhotos([]);
+        return;
+      }
+
+      const files = await FileSystem.readDirectoryAsync(folderUri);
+      const photoFiles = files.filter((f) => f.endsWith(".jpg"));
+
+      const photos: Photo[] = [];
+
+      for (const photoFile of photoFiles) {
+        const id = photoFile.replace("photo_", "").replace(".jpg", "");
+        const uri = `${folderUri}/${photoFile}`;
+        const metadataUri = `${folderUri}/photo_${id}.json`;
+
+        let timestamp = 0;
+        let lat = "";
+        let long = "";
+
+        try {
+          const metadataStr = await FileSystem.readAsStringAsync(metadataUri);
+          const metadata = JSON.parse(metadataStr);
+          timestamp = metadata.timestamp || 0;
+          lat = metadata.location?.coords?.latitude?.toString() || "";
+          long = metadata.location?.coords?.longitude?.toString() || "";
+        } catch (e) {
+          console.log("error metadata", e);
+        }
+
+        photos.push({ id, uri, timestamp, lat, long });
+      }
+
+      changePhotos(photos);
+      router.dismiss();
+    } catch (e) {
+      console.error("Error loading photos:", e);
+      useToast("Erro ao carregar fotos", "danger");
+      changePhotos([]);
     }
   };
 

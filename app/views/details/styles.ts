@@ -1,4 +1,5 @@
 import resizePixel from "@functions/resizePixel";
+import colors from "@theme/colors";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -11,8 +12,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   photo: {
+    backgroundColor: colors.GRAY_50,
     width: "100%",
-    height: resizePixel(600, "height"),
+    height: resizePixel(540, "height"),
     resizeMode: "cover",
   },
 });

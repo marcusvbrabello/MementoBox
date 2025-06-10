@@ -1,5 +1,7 @@
+import useToast from "@hooks/useToast";
 import { albumStore } from "@store/album";
 import { Photo } from "@store/types";
+import * as FileSystem from "expo-file-system";
 import { useRouter } from "expo-router";
 
 export function useAlbumViewModel() {
@@ -19,10 +21,58 @@ export function useAlbumViewModel() {
     router.navigate("/views/details");
   }
 
+  const loadPhotosFromFolder = async () => {
+    try {
+      const folderUri = FileSystem.documentDirectory + "MementoBoxPhotos";
+      const folderInfo = await FileSystem.getInfoAsync(folderUri);
+      if (!folderInfo.exists) {
+        changePhotos([]);
+        return;
+      }
+
+      const files = await FileSystem.readDirectoryAsync(folderUri);
+      const photoFiles = files.filter((f) => f.endsWith(".jpg"));
+
+      const photos: Photo[] = [];
+
+      for (const photoFile of photoFiles) {
+        const id = photoFile.replace("photo_", "").replace(".jpg", "");
+        const uri = `${folderUri}/${photoFile}`;
+        const metadataUri = `${folderUri}/photo_${id}.json`;
+
+        const fileInfo = await FileSystem.getInfoAsync(uri);
+
+        let timestamp = 0;
+        let lat = "";
+        let long = "";
+
+        try {
+          const metadataStr = await FileSystem.readAsStringAsync(metadataUri);
+          const metadata = JSON.parse(metadataStr);
+          timestamp = metadata.timestamp || 0;
+          lat = metadata.location?.coords?.latitude?.toString() || "";
+          long = metadata.location?.coords?.longitude?.toString() || "";
+        } catch (e) {
+          console.log("error metadata", e);
+        }
+
+        photos.push({ id, uri, timestamp, lat, long });
+      }
+
+      changePhotos(photos);
+    } catch (e) {
+      useToast("Erro ao carregar fotos", "danger");
+
+      console.error("Error loading photos:", e);
+      changePhotos([]);
+    }
+  };
+
   return {
     ...store,
     data,
     openDetails,
-    openCamera
+    openCamera,
+    loadPhotosFromFolder,
   };
 }

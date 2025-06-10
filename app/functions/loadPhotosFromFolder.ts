@@ -3,15 +3,12 @@ import { Photo } from "@store/types";
 import * as FileSystem from "expo-file-system";
 
 export async function loadPhotosFromFolder() {
-  console.log("loadPhotosFromFolder");
   const store = albumStore((state) => state);
   const { changePhotos } = store;
 
   try {
-    console.log("entrou");
     const folderUri = FileSystem.documentDirectory + "MementoBoxPhotos";
     const folderInfo = await FileSystem.getInfoAsync(folderUri);
-    console.log("folderInfo: ", JSON.stringify(folderInfo));
     if (!folderInfo.exists) {
       store.changePhotos([]);
       return;
@@ -43,7 +40,6 @@ export async function loadPhotosFromFolder() {
 
       photos.push({ id, uri, timestamp, lat, long });
     }
-    console.log("loaded photos ", JSON.stringify(photos));
     changePhotos(photos);
   } catch (e) {
     console.error("Error loading photos:", e);

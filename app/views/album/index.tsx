@@ -1,6 +1,5 @@
 import Page from "@components/Page";
 import { GenericText } from "@components/Texts/GenericText";
-import { loadPhotosFromFolder } from "@functions/loadPhotosFromFolder";
 import resizePixel from "@functions/resizePixel";
 import colors from "@theme/colors";
 import { useAlbumViewModel } from "@view_models/album";
@@ -13,7 +12,7 @@ export default function Album() {
   const { container, photoItem, cameraButton, list, columnWrapperStyle } =
     style();
 
-  const { data, openDetails, openCamera } = useAlbumViewModel();
+  const { data, openDetails, openCamera, loadPhotosFromFolder } = useAlbumViewModel();
 
   useEffect(() => {
     loadPhotosFromFolder();
