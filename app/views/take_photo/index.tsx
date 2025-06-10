@@ -45,16 +45,20 @@ export default function TakePhoto() {
           style={flex}
         />
         <View style={footer}>
-          <TouchableOpacity onPress={goBack}>
+          <TouchableOpacity accessibilityLabel="Voltar" onPress={goBack}>
             <X size={resizePixel(28)} color={colors.WHITE} />
           </TouchableOpacity>
           <TouchableOpacity
+            accessibilityLabel="Tirar foto"
             style={cameraButton}
             onPress={() => takeAndSavePhoto()}
           >
             <Camera size={resizePixel(40)} color={colors.BLACK} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setFacing(!facing)}>
+          <TouchableOpacity
+            accessibilityLabel="Virar câmera"
+            onPress={() => setFacing(!facing)}
+          >
             <CameraRotate size={resizePixel(28)} color={colors.WHITE} />
           </TouchableOpacity>
         </View>

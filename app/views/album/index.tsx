@@ -21,14 +21,25 @@ export default function Album() {
   const renderItem = ({ item }: { item: any }) => {
     if (item.id === "camera") {
       return (
-        <TouchableOpacity style={cameraButton} onPress={() => openCamera()}>
+        <TouchableOpacity
+          style={cameraButton}
+          onPress={() => openCamera()}
+          accessibilityLabel="Adicionar nova foto"
+        >
           <CameraPlus size={resizePixel(36)} color={colors.BLACK} />
         </TouchableOpacity>
       );
     }
     return (
-      <TouchableOpacity onPress={() => openDetails(item)}>
-        <Image source={{ uri: item.uri }} style={photoItem} />
+      <TouchableOpacity
+        onPress={() => openDetails(item)}
+        accessibilityLabel={`Abrir detalhes da foto ${item.id}`}
+      >
+        <Image
+          source={{ uri: item.uri }}
+          style={photoItem}
+          accessibilityLabel={`Foto ${item.id}`}
+        />
       </TouchableOpacity>
     );
   };
@@ -58,6 +69,12 @@ export default function Album() {
           showsHorizontalScrollIndicator={false}
           columnWrapperStyle={columnWrapperStyle}
           style={list}
+          initialNumToRender={12}
+          getItemLayout={(_, index) => ({
+            length: resizePixel(110, "width"),
+            offset: resizePixel(110, "width") * index,
+            index,
+          })}
         />
       </View>
     </Page>

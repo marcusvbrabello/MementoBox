@@ -8,9 +8,9 @@ export default function RootLayout() {
         headerTitle: "none",
       }}
     >
-      <Stack.Screen name="views/album" />
-      <Stack.Screen name="views/details" />
-      <Stack.Screen name="views/take_photo" />
+      <Stack.Screen name="views/album/index" />
+      <Stack.Screen name="views/details/index" />
+      <Stack.Screen name="views/take_photo/index" />
     </Stack>
   );
 }

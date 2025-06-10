@@ -34,13 +34,13 @@ const styles = StyleSheet.create({
 export const style = () => {
   const { cameraButton, photoItem } = styles;
 
-  const dyynamicCameraButton = {
+  const dynamicCameraButton = {
     ...cameraButton,
     ...photoItem,
   };
 
   return {
     ...styles,
-    cameraButton: dyynamicCameraButton,
+    cameraButton: dynamicCameraButton,
   };
 };

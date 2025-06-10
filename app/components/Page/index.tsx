@@ -17,7 +17,7 @@ export default function Page({
   showHelpIcon = false,
   backFunction,
   height = "auto",
-  straight = false
+  straight = false,
 }: PageProps) {
   const { goBack } = usePageViewModel();
 
@@ -34,6 +34,7 @@ export default function Page({
         <View style={header}>
           {goBackScreen ? (
             <TouchableOpacity
+              accessibilityLabel="Voltar"
               style={button}
               onPress={() => (backFunction ? backFunction() : goBack())}
             >
