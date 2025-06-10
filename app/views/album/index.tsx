@@ -34,7 +34,7 @@ export default function Album() {
   };
 
   return (
-    <Page title="Álbum" goBackScreen={false}>
+    <Page title="MementoBox" goBackScreen={false}>
       <View style={container}>
         <View>
           <GenericText
